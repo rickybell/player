@@ -4,7 +4,7 @@ describe("Video",function(){
 	describe("when a video has been created",function(){
 
 		beforeEach(function(){
-		 	video = new Video("20131029233700");
+		 	video = new Video("01-20131017094708.mp4");
 		});
 
 		it("should not raise an exception",function(){

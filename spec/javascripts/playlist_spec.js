@@ -9,41 +9,47 @@ describe("Playlist features tests",function(){
 	var firstVideo = null;
 	var secondVideo = null;
 
-	beforeEach(function(){
-
-		videoUrl = "http://dvrcontex.herokuapp.com/cortex/20131111/576M/5647";
-
-		videosMock = ['01-20131017094708.mp4','02-20131017094808.mp4','03-20131017094908.mp4'];
-
-		loadFixtures('playlist_index.html');
-
-		ajax_spy = spyOn($,'get').andReturn('');
-
-		playlist = new Playlist($('.page-data').data('videos-url'));
-
-		// Vai ficar aki como exemplo
-		// expect(ajax_spy.mostRecentCall.args[0]).toBe(ajaxUrlGetVideos);
-	 	// expect($.param(ajax_spy.mostRecentCall.args[1])).toBe($.param({}));
-
-	 	callback = ajax_spy.mostRecentCall.args[2];
-	 	callback({ 
-	 		url : videoUrl, 
-	 		videos : videosMock,
-	 		cameras : ['1','2','3','4']
-	 	});
-
-	 	firstVideo = [videoUrl,'1',videosMock[0]].join('/');
-
-	 	secondVideo = [videoUrl,'1',videosMock[1]].join('/'); 
-
-	 	
-	})
-
 	describe("When the Playlist has been created", function(){
+
+		beforeEach(function(){
+
+			videoUrl = "http://dvrcortex.herokuapp.com/cortex/20131111/576M/5647";
+
+			videosMock = new Array('01-20131017094708.mp4','02-20131017094808.mp4','03-20131017094908.mp4');
+
+			loadFixtures('playlist_index.html');
+
+			ajax_spy = spyOn($,'get').andReturn('');
+
+			playlist = new Playlist($('.page-data').data('videos-url'));
+
+			// Vai ficar aki como exemplo
+			// expect(ajax_spy.mostRecentCall.args[0]).toBe(ajaxUrlGetVideos);
+		 	// expect($.param(ajax_spy.mostRecentCall.args[1])).toBe($.param({}));
+
+		 	callback = ajax_spy.mostRecentCall.args[2];
+		 	callback({ 
+		 		url : videoUrl, 
+		 		videos : videosMock,
+		 		cameras : ['1','2','3','4']
+		 	});
+
+		 	firstVideo = [videoUrl,'1',videosMock[0]].join('/');
+
+		 	secondVideo = [videoUrl,'1',videosMock[1]].join('/'); 
+
+		 	
+		})
+
+	
 
 		it("should the fixtures has been loaded",function(){
 			var titulo_da_pagina = $('h1').html();
 			expect(titulo_da_pagina).toBe('playlist test');
+		})
+
+		it("should have the page properties data defined", function(){
+			expect($('.page-data')).toBeDefined();
 		})
 
 		it("should have page data properties for store open iteractions",function(){
@@ -72,7 +78,7 @@ describe("Playlist features tests",function(){
 	
 		it("should the current video be first from list",function(){
 			var currentVideo = playlist.getCurrentVideo();
-			expect(currentVideo[0]).toEqual(videoUrl + '/1/' + videosMock[0]);
+			expect(currentVideo[0]).toEqual(firstVideo);
 		});
 
 		it("the total lines of urls videos received when requested video current must equal the total number of cameras",function(){
@@ -83,12 +89,46 @@ describe("Playlist features tests",function(){
 
 	describe("Iterating through the playlist",function(){
 
+		beforeEach(function(){
+
+			videoUrl = "http://dvrcortex.herokuapp.com/cortex/20131111/576M/5647";
+
+			videosMock = new Array('01-20131017094708.mp4','02-20131017094808.mp4','03-20131017094908.mp4');
+
+			loadFixtures('playlist_index.html');
+
+			ajax_spy = spyOn($,'get').andReturn('');
+
+			playlist = new Playlist($('.page-data').data('videos-url'));
+
+			// Vai ficar aki como exemplo
+			// expect(ajax_spy.mostRecentCall.args[0]).toBe(ajaxUrlGetVideos);
+		 	// expect($.param(ajax_spy.mostRecentCall.args[1])).toBe($.param({}));
+
+
+		 	callback = ajax_spy.mostRecentCall.args[2];
+		 	callback({ 
+		 		url : videoUrl, 
+		 		videos : videosMock,
+		 		cameras : ['1','2','3','4']
+		 	});
+
+		 	firstVideo = [videoUrl,'1',videosMock[0]].join('/');
+
+		 	secondVideo = [videoUrl,'1',videosMock[1]].join('/'); 
+
+		 	
+		})
+
+
+
 		var nextVideos = null;
 		var previousVideos = null;
 
 		beforeEach(function(){
 			nextVideos = playlist.getNextVideo();
 		});
+
 
 		describe("Asking for the next video",function(){
 
@@ -117,5 +157,3 @@ describe("Playlist features tests",function(){
 		});
 	});
 });
-
-//003131576240253
