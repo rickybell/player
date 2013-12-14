@@ -2,7 +2,8 @@ describe("Player features tests",function(){
 	var player = null;
 	var videosMock = null;
 	var firstVideo = null;
-
+	var my_update = null;
+	
 	beforeEach(function(){
 		//var videoUrl = "http://dvrcortex.herokuapp.com/cortex/20131111/576M/5647";
 
@@ -24,6 +25,8 @@ describe("Player features tests",function(){
 
 		player = new Player(
 			playlist);
+
+		my_update = spyOn(player,'updatePlayingTime');
 
 		firstVideo = [$('.page-data').data('pathUrl'),'1',videosMock[0]].join('/');
 
@@ -48,19 +51,13 @@ describe("Player features tests",function(){
 		
 		var isPlaying_spy = null;
 		var playerSetInterval = null;
-		var update = null;
-
 		beforeEach(function(){
 			spyOn(document.getElementById('1'),'play');
-			
-			
-			//startPlayingTimer_spy = spyOn(player,'startPlayingTimer');
-			//updateCurrentTimer_spy = spyOn(player,'updateCurrentTimer');
-			
+			jasmine.Clock.useMock();
 			playerSetInterval = spyOn(window,'setInterval');
-			player.play();
-			update = spyOn(player,'update');
-			isPlaying_spy = spyOn(player,'isPlaying');
+			player.play(document.getElementById('start-current-time'),
+				document.getElementById('end-current-time'),1000);
+
 		})
 
 		describe("When the Play method is called",function(){
@@ -82,20 +79,21 @@ describe("Player features tests",function(){
 			})
 
 			it("Should 'isPlaying' be true", function(){
-				expect(player.isPlaying).toBeTruthy();
+				expect(player.isPlaying()).toBeTruthy();
 			})
 			
 			it("Should 'setInterval' has started",function(){
 				expect(playerSetInterval).toHaveBeenCalled();
 			})
-			// it("Should 'update' has called after a cycle.", function(){
-			// 	expect(player.update).toHaveBeenCalled();
-			// })
+			it("Should 'update' has called after every second.", function(){
+				jasmine.Clock.tick(1001);
+				expect(document.getElementById('end-current-time').value).toBe("09:47:09");
+			})
 
 		})
 
 		describe("When the 'video' ended",function(){
-
+			
 		})
 	})
 })

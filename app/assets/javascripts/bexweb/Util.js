@@ -50,3 +50,35 @@ Util.addZero = function(value){
     }
     return value;
 }
+
+Util.dateFormatFromHumamRealiableFormat = function(humanRealiableFormatDate){
+  var name = humanRealiableFormatDate.toString();
+  var mydate = new Date(
+      name.substr(0,4),
+      name.substr(4,2),
+      name.substr(6,2),
+      name.substr(8,2),
+      name.substr(10,2),
+      name.substr(12,2)
+    );
+  return [
+      Util.addZero(
+        mydate.getHours()),
+      Util.addZero(
+        mydate.getMinutes()),
+      Util.addZero(
+        mydate.getSeconds())
+    ].join(":");
+}
+
+Util.dateFormatFromTimestamp = function(timestampDate){
+  var mydate = new Date(timestampDate);
+  return [
+      Util.addZero(
+        mydate.getHours()),
+      Util.addZero(
+        mydate.getMinutes()),
+      Util.addZero(
+        mydate.getSeconds())
+    ].join(":");
+}

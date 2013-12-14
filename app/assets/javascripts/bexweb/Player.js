@@ -6,6 +6,9 @@ var Player = function(playlist){
 	var _currentTime = null;
 	var _originalTime = null;
 	var _playing = false;
+	var _fieldStartTime = null;
+	var _fieldEndTime = null;
+	var _gap = 1000;
 
 	var _builder = function(){
 		_playlist = playlist;
@@ -24,6 +27,8 @@ var Player = function(playlist){
 	var _isPlaying = function(){
 		return _playing;
 	}
+
+	
 
 	var _getTotalVideos = function(){
 		return _playlist.totalItens();
@@ -57,27 +62,44 @@ var Player = function(playlist){
 		return _originalTime;
 	}
 
-	var _play = function(){
+	var _play = function(fieldStartTime,fieldEndTime,gap){
 		if (!_isPlaying() && _isPlaylistFilled() && playlist.isThereNextVideo()){
 			_currentlyPlayingVideo = playlist.getCurrentVideo();
 			var cameras = playlist.getCameras();
-			//console.log(cameras[0]);
 			_currentlyPlayingVideo.forEach(function(video,id){
 				var camera = cameras[id];
 				_videosContainerList[camera].src = video;
 				_videosContainerList[camera].play();
 			})
+			if (fieldStartTime != undefined && fieldEndTime != undefined){
+				_fieldStartTime = fieldStartTime;
+				_fieldEndTime = fieldEndTime;
+			}
+			if (gap != undefined){
+				_gap = gap;
+			}	
+			_updateFieldsTime();
 			setInterval(
 				function(){
-					_update();
-				}
-				,1000);
+				_update()}
+				,_gap
+			);
 			_playing = true;
 		}
 	}
 
 	var _update = function(){
-		//if ()
+		_updatePlayingTime();
+		_updateFieldsTime();
+	}
+
+	var _updateFieldsTime = function(){
+		_fieldStartTime.value =  Util.dateFormatFromTimestamp(_currentTime);
+		_fieldEndTime.value = Util.dateFormatFromTimestamp(_currentTime);
+	}
+
+	var _updatePlayingTime = function(){
+		_currentTime = _currentTime + _gap;
 	}
 
 	_builder();
@@ -89,9 +111,13 @@ var Player = function(playlist){
 		getCurrentlyPlayingVideo : _getCurrentlyPlayingVideo,
 		getCurrentTime : _getCurrentTime,
 		getOriginalStartTime : _getOriginalStartTime,
-		isPlaying : _playing,
+		isPlaying : _isPlaying,
 		play : _play,
-		update : _update
+		update : _update,
+		updatePlayingTime : _updatePlayingTime,
+		joaoDeDio : function joaoDeDio(){
+
+		}
 	}
 
 	// metodo que dispara o timer
